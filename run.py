@@ -1,19 +1,14 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from BaselineRemoval import BaselineRemoval
 
-data = np.genfromtxt("Benitoite__R050320__Broad_Scan__532__0__unoriented__Raman_Data_RAW__17844.txt", comments="##", delimiter=",")
+file = "data analysis project//120oC/120 80_1__X_-49.6__Y_-2.35417__Time_3.txt"
+
+data = np.genfromtxt(file, delimiter="\t")
 
 range = data[:,0]
 shift = data[:,1]
 
-max_shift = max(abs(shift))
-shift = shift / max_shift
+plt.plot(range, shift, label="Raw Data")
 
-# See https://pypi.org/project/BaselineRemoval/
-dat = BaselineRemoval(shift)
-Zhangfit_output=dat.ZhangFit()
-
-plt.plot(range, shift)
-plt.plot(range, Zhangfit_output)
+plt.legend()
 plt.show()

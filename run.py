@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-file = "data analysis project//120oC/120 80_1__X_-49.6__Y_-2.35417__Time_3.txt"
+file = "data analysis project//120oC/120 80_300__X_70__Y_-2.35417__Time_1162.txt"
 
 data = np.genfromtxt(file, delimiter="\t")
 

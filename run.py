@@ -31,7 +31,12 @@ def read_data(filename):
 #
 
 # Plot settings
-plot_ = [0, 0, 0, 0, 1]
+#   0. Intensity v Raman Shift
+#   1. Raw Epoxy Concentration
+#   2. Scaled Concentration Profile
+#   3. Demonstration of scan
+#   4. Smoothed Concentration Profile
+plot_ = [1, 1, 1, 1, 1]
 
 # How many files to skip to plot one
 skip = 50

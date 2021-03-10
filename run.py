@@ -45,10 +45,10 @@ data_dict = {}
 #   PEAK: Main peak location
 #   WIDTH: width of max search
 pei_peak = 1004
-pei_width = 20
+pei_width = 10
 
 epoxy_peak = 987
-epoxy_width = 20
+epoxy_width = 10
 
 # Read in data
 for filename in allfiles:
@@ -100,8 +100,10 @@ for i in ordered_keys:
     # x value
     x_val.append(x_coord)
 
+x_val = np.array(x_val)
+
 # Data is read from back to front, so reverse
-x_val = np.flip(x_val) # See below for my argument for the inclusion of this line
+#x_val = np.flip(x_val) # See below for my argument for the inclusion of this line
 pei_max = np.flip(pei_max)
 epo_max = np.flip(epo_max)
 
@@ -116,6 +118,32 @@ plt.show()
 #   Why the selected value for cm^-1? - use papers, specifically TUDelft Gradient Tg
 #   How to normalize it? - ie values in example are not exactly between 0 and 1
 #   Process + make the graph better
+
+mask_low_x = (x_val > -50) & (x_val < -37)
+mask_high_x = (x_val > 60) & (x_val < 70)
+
+# Switch them just for testing:
+a = mask_low_x
+b = mask_high_x
+mask_high_x = a
+mask_low_x = b
+
+# PEI
+pei_min_mean = np.mean(pei_max[mask_low_x])
+pei_max_mean = np.mean(pei_max[mask_high_x])
+
+# EPO
+epo_min_mean = np.mean(epo_max[mask_high_x])
+epo_max_mean = np.mean(epo_max[mask_low_x])
+
+# Scale between (almost) 0 and 1
+ramp_pei = (pei_max - pei_min_mean)/(pei_max_mean - pei_min_mean)
+ramp_epo = (epo_max - epo_min_mean)/(epo_max_mean - epo_min_mean)
+
+plt.plot(x_val, ramp_epo, label="EPO")
+plt.plot(x_val, ramp_pei, label="PEI")
+plt.legend()
+plt.show()
 
 # Test plot the concentration
 for i in ordered_keys:

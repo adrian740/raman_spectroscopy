@@ -36,7 +36,7 @@ def read_data(filename):
 #   2. Scaled Concentration Profile
 #   3. Demonstration of scan
 #   4. Smoothed Concentration Profile
-plot_ = [1, 1, 1, 1, 1]
+plot_ = [0, 0, 0, 0, 1]
 
 # How many files to skip to plot one
 skip = 50

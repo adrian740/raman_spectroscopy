@@ -31,7 +31,7 @@ def read_data(filename):
 #
 
 # Plot settings
-plot_ = False
+plot_ = [0, 0, 1]
 
 # How many files to skip to plot one
 skip = 50
@@ -61,11 +61,11 @@ for i in ordered_keys:
     filename = mapping[i]
     shift, intensity, smooth_intensity_data, x_coord = read_data(path + filename)
     idx += 1
-    if plot_ and idx % skip is 0:
+    if plot_[0] is 1 and idx % skip is 0:
         plt.plot(shift, smooth_intensity_data, label=filename)
     data_dict[i] = [shift, intensity, smooth_intensity_data, x_coord]
 
-if plot_:
+if plot_[0] is 1:
     plt.legend()
     plt.show()
 
@@ -108,10 +108,11 @@ pei_max = np.flip(pei_max)
 epo_max = np.flip(epo_max)
 
 # Plot the concentration profiles
-plt.plot(x_val, epo_max, label="EPOXY")
-plt.plot(x_val, pei_max, label="PEI")
-plt.legend()
-plt.show()
+if plot_[0] is 1:
+    plt.plot(x_val, epo_max, label="EPOXY")
+    plt.plot(x_val, pei_max, label="PEI")
+    plt.legend()
+    plt.show()
 
 # Remaining Questions:
 #   Why do they reach similar maximum value (ie same order of magnitude)
@@ -140,10 +141,11 @@ epo_max_mean = np.mean(epo_max[mask_low_x])
 ramp_pei = (pei_max - pei_min_mean)/(pei_max_mean - pei_min_mean)
 ramp_epo = (epo_max - epo_min_mean)/(epo_max_mean - epo_min_mean)
 
-plt.plot(x_val, ramp_epo, label="EPO")
-plt.plot(x_val, ramp_pei, label="PEI")
-plt.legend()
-plt.show()
+if plot_[1] is 1:
+    plt.plot(x_val, ramp_epo, label="EPO")
+    plt.plot(x_val, ramp_pei, label="PEI")
+    plt.legend()
+    plt.show()
 
 # Test plot the concentration
 for i in ordered_keys:
@@ -152,8 +154,8 @@ for i in ordered_keys:
     if abs(x_coord + 40.0) < 0.01 or abs(x_coord - 70.0) < 0.01:
         plt.plot(shift, intensity, label=("x = " + str(x_coord)))
 
-plt.plot([pei_peak, pei_peak], [0, 5000], color="r", label="PEI Peak")
-plt.plot([epoxy_peak, epoxy_peak], [0, 5000], color="g", label="EPO Peak")
-
-plt.legend()
-plt.show()
+if plot_[2] is 1:
+    plt.plot([pei_peak, pei_peak], [0, 5000], color="r", label="PEI Peak")
+    plt.plot([epoxy_peak, epoxy_peak], [0, 5000], color="g", label="EPO Peak")
+    plt.legend()
+    plt.show()

@@ -28,14 +28,14 @@ amp_pei(ii) = max (s_amp); % write max pei peak value to array
 end;
 
 % remove data between xcoord 33 to 36 due to sample contamination
-amp_pei(x_coord>-92.4 & x_coord<-91.6) = [];
-amp_epo(x_coord>-92.4 & x_coord<-91.6) = [];
-x_coord(x_coord>-92.4 & x_coord<-91.6) = [];
+%amp_pei(x_coord>-92.4 & x_coord<-91.6) = [];
+%amp_epo(x_coord>-92.4 & x_coord<-91.6) = [];
+%x_coord(x_coord>-92.4 & x_coord<-91.6) = [];
 
 
 %refined max min values in PEI range by averaging in platau range
 max_amp_pei = mean(amp_pei(x_coord>-50 & x_coord<-37))
-min_amp_epo = mean(amp_epo(x_coord>-50 & x_coord<-37.6))
+min_amp_epo = mean(amp_epo(x_coord>-50 & x_coord<-37))
 
 min_amp_pei = mean(amp_pei(x_coord>60 & x_coord<70))
 max_amp_epo = mean(amp_epo(x_coord>60 & x_coord<70))
@@ -58,26 +58,26 @@ dCdx = gradient(relamp_epo_smooth(:));
 
 figure (1);
 grid off;
-title ('120°C 80% DOC');
+title ('120C 80% DOC');
 xlabel ('distance (microns)');
 ylabel ('peak amplitude normalized concentration');
 hold on;
 plot (x_coord, relamp_pei);
-print('120°C 80% DOC','-dpng','-r400');
+print('120C 80% DOC','-dpng','-r400');
 
 figure (2);
 grid off;
-title ('120°C DOC');
+title ('120C DOC');
 xlabel ('distance (microns)');
 ylabel ('peak amplitude normalized concentration');
 hold on;
 plot (x_coord, relamp_pei_smooth);
-print('120°C 80% DOC - Smooth curves','-dpng','-r400');
+print('120C 80% DOC - Smooth curves','-dpng','-r400');
 
 figure (3);
 grid off;
-title ('120°C DOC - Gradient for Epoxy curve');
+title ('120C DOC - Gradient for Epoxy curve');
 xlabel ('distance (microns)');
 ylabel ('derivative of normalized concentration dC/dx');
 hold on;
-print('120°C 80% DOC - Gradient concentration','-dpng','-r400');
+print('120C 80% DOC - Gradient concentration','-dpng','-r400');

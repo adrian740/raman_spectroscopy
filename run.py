@@ -31,7 +31,7 @@ def read_data(filename):
 #
 
 # Plot settings
-plot_ = [1, 1, 1]
+plot_ = [0, 0, 0, 0, 1]
 
 # How many files to skip to plot one
 skip = 50
@@ -44,11 +44,11 @@ data_dict = {}
 # Raman Analysis Settings
 #   PEAK: Main peak location
 #   WIDTH: width of max search
-pei_peak = 1004
-pei_width = 20
+pei_peak = 1005
+pei_width = 10
 
-epoxy_peak = 987
-epoxy_width = 20
+epoxy_peak = 985
+epoxy_width = 10
 
 # Read in data
 for filename in allfiles:
@@ -108,7 +108,7 @@ pei_max = np.flip(pei_max)
 epo_max = np.flip(epo_max)
 
 # Plot the concentration profiles
-if plot_[0] is 1:
+if plot_[1] is 1:
     plt.plot(x_val, epo_max, label="EPOXY")
     plt.plot(x_val, pei_max, label="PEI")
     plt.legend()
@@ -141,20 +141,20 @@ epo_max_mean = np.mean(epo_max[mask_low_x])
 ramp_pei = (pei_max - pei_min_mean)/(pei_max_mean - pei_min_mean)
 ramp_epo = (epo_max - epo_min_mean)/(epo_max_mean - epo_min_mean)
 
-if plot_[1] is 1:
+if plot_[2] is 1:
     plt.plot(x_val, ramp_epo, label="EPO")
     plt.plot(x_val, ramp_pei, label="PEI")
     plt.legend()
     plt.show()
 
-# Test plot the concentration
-for i in ordered_keys:
-    shift, intensity, smooth_intensity_data, x_coord = data_dict.get(i)
+if plot_[3] is 1:
+    # Test plot the concentration
+    for i in ordered_keys:
+        shift, intensity, smooth_intensity_data, x_coord = data_dict.get(i)
 
-    if abs(x_coord + 40.0) < 0.01 or abs(x_coord - 70.0) < 0.01:
-        plt.plot(shift, intensity, label=("x = " + str(x_coord)))
+        if abs(x_coord + 40.0) < 0.01 or abs(x_coord - 70.0) < 0.01:
+            plt.plot(shift, intensity, label=("x = " + str(x_coord)))
 
-if plot_[2] is 1:
     max_v, min_v = 5000, 0
 
     plt.plot([pei_peak, pei_peak], [min_v, max_v], color="r", label="PEI Peak")
@@ -165,5 +165,14 @@ if plot_[2] is 1:
     plt.plot([epoxy_peak - epoxy_width / 2, epoxy_peak - epoxy_width / 2], [min_v, max_v], color="g", label="EPO Peak")
     plt.plot([epoxy_peak + epoxy_width / 2, epoxy_peak + epoxy_width / 2], [min_v, max_v], color="g", label="EPO Peak")
 
+    plt.legend()
+    plt.show()
+
+if plot_[4] is 1:
+    pei_hat = signal.savgol_filter(ramp_pei, 21, 3)
+    epo_hat = signal.savgol_filter(ramp_epo, 21, 3)
+
+    plt.plot(x_val, epo_hat, label="EPO")
+    plt.plot(x_val, pei_hat, label="PEI")
     plt.legend()
     plt.show()

@@ -31,7 +31,7 @@ def read_data(filename):
 #
 
 # Plot settings
-plot_ = [0, 0, 1]
+plot_ = [1, 1, 1]
 
 # How many files to skip to plot one
 skip = 50
@@ -45,10 +45,10 @@ data_dict = {}
 #   PEAK: Main peak location
 #   WIDTH: width of max search
 pei_peak = 1004
-pei_width = 10
+pei_width = 20
 
 epoxy_peak = 987
-epoxy_width = 10
+epoxy_width = 20
 
 # Read in data
 for filename in allfiles:
@@ -155,7 +155,15 @@ for i in ordered_keys:
         plt.plot(shift, intensity, label=("x = " + str(x_coord)))
 
 if plot_[2] is 1:
-    plt.plot([pei_peak, pei_peak], [0, 5000], color="r", label="PEI Peak")
-    plt.plot([epoxy_peak, epoxy_peak], [0, 5000], color="g", label="EPO Peak")
+    max_v, min_v = 5000, 0
+
+    plt.plot([pei_peak, pei_peak], [min_v, max_v], color="r", label="PEI Peak")
+    plt.plot([pei_peak - pei_width / 2, pei_peak - pei_width / 2], [min_v, max_v], color="r", label="PEI Peak")
+    plt.plot([pei_peak + pei_width / 2, pei_peak + pei_width / 2], [min_v, max_v], color="r", label="PEI Peak")
+
+    plt.plot([epoxy_peak, epoxy_peak], [min_v, max_v], color="g", label="EPO Peak")
+    plt.plot([epoxy_peak - epoxy_width / 2, epoxy_peak - epoxy_width / 2], [min_v, max_v], color="g", label="EPO Peak")
+    plt.plot([epoxy_peak + epoxy_width / 2, epoxy_peak + epoxy_width / 2], [min_v, max_v], color="g", label="EPO Peak")
+
     plt.legend()
     plt.show()

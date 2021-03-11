@@ -4,6 +4,16 @@ import scipy.signal as signal
 from os import listdir
 from os.path import isfile, join
 
+# Format matplotlib
+plt.rcParams.update({'font.size': 10})
+plt.rcParams.update({'figure.dpi': 300})
+plt.rcParams.update({'figure.autolayout': True})
+
+def format_plot():
+    plt.minorticks_on()
+    plt.grid(b=True, which='major', color='gray', linestyle='-')
+    plt.grid(b=True, which='minor', color='lightgray', linestyle='--')
+
 # Path containing the Raman Analysis
 path = "data analysis project//120oC//"
 
@@ -36,7 +46,7 @@ def read_data(filename):
 #   2. Scaled Concentration Profile
 #   3. Demonstration of scan
 #   4. Smoothed Concentration Profile
-plot_ = [0, 1, 0, 0, 1]
+plot_ = [0, 0, 1, 1, 1]
 
 # How many files to skip to plot one
 skip = 50
@@ -71,6 +81,10 @@ for i in ordered_keys:
     data_dict[i] = [shift, intensity, smooth_intensity_data, x_coord]
 
 if plot_[0] is 1:
+    plt.xlabel(r"Raman Shift [$cm^{-1}$]")
+    plt.ylabel("Intensity [units]")
+
+    format_plot()
     plt.legend()
     plt.show()
 
@@ -100,6 +114,11 @@ epo_max = np.array(epo_max)
 if plot_[1] is 1:
     plt.plot(x_val, epo_max, color="C0", label="EPOXY")
     plt.plot(x_val, pei_max, color="C1", label="PEI")
+
+    plt.xlabel("Distance [microns]")
+    plt.ylabel("Peak Intensity [units]")
+
+    format_plot()
     plt.legend()
     plt.show()
 
@@ -121,6 +140,11 @@ ramp_epo = (epo_max - epo_min_mean)/(epo_max_mean - epo_min_mean)
 if plot_[2] is 1:
     plt.plot(x_val, ramp_epo, color="C0", label="EPO")
     plt.plot(x_val, ramp_pei, color="C1", label="PEI")
+
+    plt.xlabel("Distance [microns]")
+    plt.ylabel("Normalized Peak Intensity [-]")
+
+    format_plot()
     plt.legend()
     plt.show()
 
@@ -134,14 +158,20 @@ if plot_[3] is 1:
 
     max_v, min_v = 5000, 0
 
-    plt.plot([pei_peak, pei_peak], [min_v, max_v], color="r", label="PEI Peak")
-    plt.plot([pei_peak - pei_width / 2, pei_peak - pei_width / 2], [min_v, max_v], color="r", label="PEI Peak")
-    plt.plot([pei_peak + pei_width / 2, pei_peak + pei_width / 2], [min_v, max_v], color="r", label="PEI Peak")
+    #plt.plot([pei_peak, pei_peak], [min_v, max_v], color="r", label="PEI Peak: Central")
+    plt.plot([pei_peak - pei_width / 2, pei_peak - pei_width / 2], [min_v, max_v], color="r", label="PEI: Lower Bound")
+    plt.plot([pei_peak + pei_width / 2, pei_peak + pei_width / 2], [min_v, max_v], color="r", label="PEI: Upper Bound")
 
-    plt.plot([epoxy_peak, epoxy_peak], [min_v, max_v], color="g", label="EPO Peak")
-    plt.plot([epoxy_peak - epoxy_width / 2, epoxy_peak - epoxy_width / 2], [min_v, max_v], color="g", label="EPO Peak")
-    plt.plot([epoxy_peak + epoxy_width / 2, epoxy_peak + epoxy_width / 2], [min_v, max_v], color="g", label="EPO Peak")
+    #plt.plot([epoxy_peak, epoxy_peak], [min_v, max_v], color="g", label="EPO Peak: Central")
+    plt.plot([epoxy_peak - epoxy_width / 2, epoxy_peak - epoxy_width / 2], [min_v, max_v], color="g", label="EPO: Lower Bound")
+    plt.plot([epoxy_peak + epoxy_width / 2, epoxy_peak + epoxy_width / 2], [min_v, max_v], color="g", label="EPO: Upper Bound")
 
+    plt.xlabel(r"Raman Shift [$cm^{-1}$]")
+    plt.ylabel("Intensity [units]")
+
+    plt.xlim(950, 1040)
+
+    format_plot()
     plt.legend()
     plt.show()
 
@@ -152,6 +182,11 @@ if plot_[4] is 1:
 
     plt.plot(x_val, epo_hat, color="C0", label="EPO")
     plt.plot(x_val, pei_hat, color="C1", label="PEI")
+
+    plt.xlabel("Distance [microns]")
+    plt.ylabel("Normalized Peak Intensity [-]")
+
+    format_plot()
     plt.legend()
     plt.show()
 

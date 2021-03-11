@@ -32,6 +32,7 @@ end;
 %amp_epo(x_coord>-92.4 & x_coord<-91.6) = [];
 %x_coord(x_coord>-92.4 & x_coord<-91.6) = [];
 
+testval = amp_pei(x_coord>60 & x_coord<70)
 
 %refined max min values in PEI range by averaging in platau range
 max_amp_pei = mean(amp_pei(x_coord>-50 & x_coord<-37))

@@ -36,7 +36,7 @@ def read_data(filename):
 #   2. Scaled Concentration Profile
 #   3. Demonstration of scan
 #   4. Smoothed Concentration Profile
-plot_ = [0, 0, 0, 0, 1]
+plot_ = [0, 1, 0, 0, 1]
 
 # How many files to skip to plot one
 skip = 50
@@ -74,12 +74,6 @@ if plot_[0] is 1:
     plt.legend()
     plt.show()
 
-# Find the nearest value to the array
-def find_nearest(array, value):
-    array = np.asarray(array)
-    idx = (np.abs(array - value)).argmin()
-    return idx, array[idx]
-
 # Obtain Raman Max in range
 pei_max = []
 epo_max = []
@@ -89,50 +83,28 @@ for i in ordered_keys:
     shift, intensity, smooth_intensity_data, x_coord = data_dict.get(i)
 
     # PEI Analysis
-    pei_idx_low, piw_val_low = find_nearest(shift, pei_peak - pei_width / 2)
-    pei_idx_high, piw_val_high = find_nearest(shift, pei_peak + pei_width / 2)
-
-    pei_dat = intensity[pei_idx_high:pei_idx_low]
-    pei_max.append(max(pei_dat))
+    pei_max.append((max(intensity[(shift > pei_peak - pei_width / 2) & (shift < pei_peak + pei_width / 2)])))
 
     # EPOXY Analysis
-    epo_idx_low, piw_epo_low = find_nearest(shift, epoxy_peak - epoxy_width / 2)
-    epo_idx_high, piw_epo_high = find_nearest(shift, epoxy_peak + epoxy_width / 2)
-
-    epo_dat = intensity[epo_idx_high:epo_idx_low]
-    epo_max.append(max(epo_dat))
+    epo_max.append((max(intensity[(shift > epoxy_peak - epoxy_width / 2) & (shift < epoxy_peak + epoxy_width / 2)])))
 
     # x value
     x_val.append(x_coord)
 
+# Convert to numpy arrays
 x_val = np.array(x_val)
-
-# Data is read from back to front, so reverse
-#x_val = np.flip(x_val) # See below for my argument for the inclusion of this line
-pei_max = np.flip(pei_max)
-epo_max = np.flip(epo_max)
+pei_max = np.array(pei_max)
+epo_max = np.array(epo_max)
 
 # Plot the concentration profiles
 if plot_[1] is 1:
-    plt.plot(x_val, epo_max, label="EPOXY")
-    plt.plot(x_val, pei_max, label="PEI")
+    plt.plot(x_val, epo_max, color="C0", label="EPOXY")
+    plt.plot(x_val, pei_max, color="C1", label="PEI")
     plt.legend()
     plt.show()
 
-# Remaining Questions:
-#   Why do they reach similar maximum value (ie same order of magnitude)
-#   Why the selected value for cm^-1? - use papers, specifically TUDelft Gradient Tg
-#   How to normalize it? - ie values in example are not exactly between 0 and 1
-#   Process + make the graph better
-
 mask_low_x = (x_val > -50) & (x_val < -37)
-mask_high_x = (x_val > 60) & (x_val < 70)
-
-# Switch them just for testing:
-a = mask_low_x
-b = mask_high_x
-mask_high_x = a
-mask_low_x = b
+mask_high_x = (x_val >= 60) & (x_val < 70)
 
 # PEI
 pei_min_mean = np.mean(pei_max[mask_low_x])
@@ -147,13 +119,13 @@ ramp_pei = (pei_max - pei_min_mean)/(pei_max_mean - pei_min_mean)
 ramp_epo = (epo_max - epo_min_mean)/(epo_max_mean - epo_min_mean)
 
 if plot_[2] is 1:
-    plt.plot(x_val, ramp_epo, label="EPO")
-    plt.plot(x_val, ramp_pei, label="PEI")
+    plt.plot(x_val, ramp_epo, color="C0", label="EPO")
+    plt.plot(x_val, ramp_pei, color="C1", label="PEI")
     plt.legend()
     plt.show()
 
 if plot_[3] is 1:
-    # Test plot the concentration
+    # Test plot the concentration for x = -40 and 70
     for i in ordered_keys:
         shift, intensity, smooth_intensity_data, x_coord = data_dict.get(i)
 
@@ -174,10 +146,17 @@ if plot_[3] is 1:
     plt.show()
 
 if plot_[4] is 1:
+    # Smoothing
     pei_hat = signal.savgol_filter(ramp_pei, 21, 3)
     epo_hat = signal.savgol_filter(ramp_epo, 21, 3)
 
-    plt.plot(x_val, epo_hat, label="EPO")
-    plt.plot(x_val, pei_hat, label="PEI")
+    plt.plot(x_val, epo_hat, color="C0", label="EPO")
+    plt.plot(x_val, pei_hat, color="C1", label="PEI")
     plt.legend()
     plt.show()
+
+# Remaining Questions:
+#   Why do they reach similar maximum value (ie same order of magnitude)
+#   Why the selected value for cm^-1? - use papers, specifically TUDelft Gradient Tg
+#   How to normalize it? - ie values in example are not exactly between 0 and 1
+#   Process + make the graph better

@@ -159,12 +159,12 @@ if plot_[3] is 1:
     max_v, min_v = 5000, 0
 
     #plt.plot([pei_peak, pei_peak], [min_v, max_v], color="r", label="PEI Peak: Central")
-    plt.plot([pei_peak - pei_width / 2, pei_peak - pei_width / 2], [min_v, max_v], color="r", label="PEI: Lower Bound")
-    plt.plot([pei_peak + pei_width / 2, pei_peak + pei_width / 2], [min_v, max_v], color="r", label="PEI: Upper Bound")
+    plt.plot([pei_peak - pei_width / 2, pei_peak - pei_width / 2], [min_v, max_v], color="r", label="PEI Bounds")
+    plt.plot([pei_peak + pei_width / 2, pei_peak + pei_width / 2], [min_v, max_v], color="r")
 
     #plt.plot([epoxy_peak, epoxy_peak], [min_v, max_v], color="g", label="EPO Peak: Central")
-    plt.plot([epoxy_peak - epoxy_width / 2, epoxy_peak - epoxy_width / 2], [min_v, max_v], color="g", label="EPO: Lower Bound")
-    plt.plot([epoxy_peak + epoxy_width / 2, epoxy_peak + epoxy_width / 2], [min_v, max_v], color="g", label="EPO: Upper Bound")
+    plt.plot([epoxy_peak - epoxy_width / 2, epoxy_peak - epoxy_width / 2], [min_v, max_v], color="g", label="Epoxy Bounds")
+    plt.plot([epoxy_peak + epoxy_width / 2, epoxy_peak + epoxy_width / 2], [min_v, max_v], color="g")
 
     plt.xlabel(r"Raman Shift [$cm^{-1}$]")
     plt.ylabel("Intensity [units]")

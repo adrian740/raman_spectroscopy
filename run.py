@@ -82,7 +82,7 @@ for i in ordered_keys:
 
 if plot_[0] is 1:
     plt.xlabel(r"Raman Shift [$cm^{-1}$]")
-    plt.ylabel("Intensity [units]")
+    plt.ylabel("Intensity [Counts]")
 
     format_plot()
     plt.legend()
@@ -116,7 +116,7 @@ if plot_[1] is 1:
     plt.plot(x_val, pei_max, color="C1", label="PEI")
 
     plt.xlabel("Distance [microns]")
-    plt.ylabel("Peak Intensity [units]")
+    plt.ylabel("Peak Intensity [Counts]")
 
     format_plot()
     plt.legend()
@@ -167,7 +167,7 @@ if plot_[3] is 1:
     plt.plot([epoxy_peak + epoxy_width / 2, epoxy_peak + epoxy_width / 2], [min_v, max_v], color="g")
 
     plt.xlabel(r"Raman Shift [$cm^{-1}$]")
-    plt.ylabel("Intensity [units]")
+    plt.ylabel("Intensity [Counts]")
 
     plt.xlim(950, 1040)
 

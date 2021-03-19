@@ -169,7 +169,7 @@ if plot_[3] is 1:
     plt.xlabel(r"Raman Shift [$cm^{-1}$]")
     plt.ylabel("Intensity [Counts]")
 
-    plt.xlim(950, 1040)
+    #plt.xlim(950, 1040)
 
     format_plot()
     plt.legend()

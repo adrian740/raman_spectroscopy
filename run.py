@@ -46,7 +46,7 @@ def read_data(filename):
 #   2. Scaled Concentration Profile
 #   3. Demonstration of scan
 #   4. Smoothed Concentration Profile
-plot_ = [0, 0, 1, 1, 1]
+plot_ = [0, 1, 1, 1, 1]
 
 # How many files to skip to plot one
 skip = 50
@@ -59,11 +59,11 @@ data_dict = {}
 # Raman Analysis Settings
 #   PEAK: Main peak location
 #   WIDTH: width of max search
-pei_peak = 1005
-pei_width = 10
+pei_peak = 1004
+pei_width = 5
 
-epoxy_peak = 985
-epoxy_width = 10
+epoxy_peak = 987
+epoxy_width = 14
 
 # Read in data
 for filename in allfiles:
@@ -153,8 +153,27 @@ if plot_[3] is 1:
     for i in ordered_keys:
         shift, intensity, smooth_intensity_data, x_coord = data_dict.get(i)
 
-        if abs(x_coord + 40.0) < 0.01 or abs(x_coord - 70.0) < 0.01:
-            plt.plot(shift, intensity, label=("x = " + str(x_coord)))
+        if abs(x_coord + 40.0) < 0.01:
+            plt.plot(shift, intensity, label=("x = " + str(x_coord)), color="C0")
+
+            mask = (shift > epoxy_peak - epoxy_width / 2) & (shift < epoxy_peak + epoxy_width / 2)
+            max_s = max(intensity[mask])/2
+            diff = intensity - max_s
+            low_s, high_s = shift[(shift < epoxy_peak) & (diff <= 0)][0], shift[(shift > epoxy_peak) & (diff <= 0)][-1] - 0.8
+
+            plt.plot([low_s, low_s, high_s, high_s], [0, max_s, max_s, 0], color="fuchsia")
+            print(x_coord, high_s-low_s)
+
+        elif abs(x_coord - 70.0) < 0.01:
+            plt.plot(shift, intensity, label=("x = " + str(x_coord)), color="C1")
+
+            mask = (shift > pei_peak - pei_width / 2) & (shift < pei_peak + pei_width / 2)
+            max_s = max(intensity[mask]) / 2
+            diff = intensity - max_s
+            low_s, high_s = shift[(shift < pei_peak) & (diff <= 0)][0], shift[(shift > pei_peak) & (diff <= 0)][-1] - 0.8
+
+            plt.plot([low_s, low_s, high_s, high_s], [0, max_s, max_s, 0], color="fuchsia", label="FWHM")
+            print(x_coord, high_s - low_s)
 
     max_v, min_v = 5000, 0
 
@@ -169,7 +188,7 @@ if plot_[3] is 1:
     plt.xlabel(r"Raman Shift [$cm^{-1}$]")
     plt.ylabel("Intensity [Counts]")
 
-    #plt.xlim(950, 1040)
+    plt.xlim(950, 1040)
 
     format_plot()
     plt.legend()

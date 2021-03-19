@@ -112,10 +112,10 @@ epo_max = np.array(epo_max)
 
 # Plot the concentration profiles
 if plot_[1] is 1:
-    plt.plot(x_val, epo_max, color="C0", label="EPOXY")
-    plt.plot(x_val, pei_max, color="C1", label="PEI")
+    plt.plot(x_val, epo_max, color="C0", label="% Epoxy")
+    plt.plot(x_val, pei_max, color="C1", label="% PEI")
 
-    plt.xlabel("Distance [microns]")
+    plt.xlabel("Distance [micrometers]")
     plt.ylabel("Peak Intensity [Counts]")
 
     format_plot()
@@ -138,10 +138,10 @@ ramp_pei = (pei_max - pei_min_mean)/(pei_max_mean - pei_min_mean)
 ramp_epo = (epo_max - epo_min_mean)/(epo_max_mean - epo_min_mean)
 
 if plot_[2] is 1:
-    plt.plot(x_val, ramp_epo, color="C0", label="EPO")
-    plt.plot(x_val, ramp_pei, color="C1", label="PEI")
+    plt.plot(x_val, ramp_epo, color="C0", label="% Epoxy")
+    plt.plot(x_val, ramp_pei, color="C1", label="% PEI")
 
-    plt.xlabel("Distance [microns]")
+    plt.xlabel("Distance [micrometers]")
     plt.ylabel("Normalized Peak Intensity [-]")
 
     format_plot()
@@ -199,10 +199,10 @@ if plot_[4] is 1:
     pei_hat = signal.savgol_filter(ramp_pei, 21, 3)
     epo_hat = signal.savgol_filter(ramp_epo, 21, 3)
 
-    plt.plot(x_val, epo_hat, color="C0", label="EPO")
-    plt.plot(x_val, pei_hat, color="C1", label="PEI")
+    plt.plot(x_val, epo_hat, color="C0", label="% Epoxy")
+    plt.plot(x_val, pei_hat, color="C1", label="% PEI")
 
-    plt.xlabel("Distance [microns]")
+    plt.xlabel("Distance [micrometers]")
     plt.ylabel("Normalized Peak Intensity [-]")
 
     format_plot()

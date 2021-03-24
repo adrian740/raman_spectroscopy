@@ -14,7 +14,7 @@ def format_plot():
     plt.grid(b=True, which='major', color='gray', linestyle='-')
     plt.grid(b=True, which='minor', color='lightgray', linestyle='--')
 
-# Path containing the Raman Analysis
+# Path containing the Raman Spectrum
 path = "data analysis project//120oC//"
 
 # All of the files in the directory (only analyze .txt files)
@@ -46,7 +46,7 @@ def read_data(filename):
 #   2. Scaled Concentration Profile
 #   3. Demonstration of scan
 #   4. Smoothed Concentration Profile
-plot_ = [0, 1, 1, 1, 1]
+plot_ = [1, 1, 1, 1, 1]
 
 # How many files to skip to plot one
 skip = 50
@@ -62,7 +62,7 @@ data_dict = {}
 pei_peak = 1004
 pei_width = 5
 
-epoxy_peak = 987
+epoxy_peak = 984
 epoxy_width = 14
 
 # Read in data
@@ -162,7 +162,7 @@ if plot_[3] is 1:
             low_s, high_s = shift[(shift < epoxy_peak) & (diff <= 0)][0], shift[(shift > epoxy_peak) & (diff <= 0)][-1] - 0.8
 
             plt.plot([low_s, low_s, high_s, high_s], [0, max_s, max_s, 0], color="fuchsia")
-            print(x_coord, high_s-low_s)
+            print(x_coord, high_s-low_s, shift[mask][np.argmax(intensity[mask])])
 
         elif abs(x_coord - 70.0) < 0.01:
             plt.plot(shift, intensity, label=("x = " + str(x_coord)), color="C1")
@@ -173,7 +173,7 @@ if plot_[3] is 1:
             low_s, high_s = shift[(shift < pei_peak) & (diff <= 0)][0], shift[(shift > pei_peak) & (diff <= 0)][-1] - 0.8
 
             plt.plot([low_s, low_s, high_s, high_s], [0, max_s, max_s, 0], color="fuchsia", label="FWHM")
-            print(x_coord, high_s - low_s)
+            print(x_coord, high_s - low_s, shift[mask][np.argmax(intensity[mask])])
 
     max_v, min_v = 5000, 0
 

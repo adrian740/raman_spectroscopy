@@ -15,7 +15,7 @@ def format_plot():
     plt.grid(b=True, which='minor', color='lightgray', linestyle='--')
 
 # Path containing the Raman Spectrum
-path = "data analysis project//120oC//"
+path = "data analysis project//140oC//"
 
 # All of the files in the directory (only analyze .txt files)
 allfiles = [f for f in listdir(path) if isfile(join(path, f))]
@@ -159,7 +159,7 @@ if plot_[3] is 1:
             mask = (shift > epoxy_peak - epoxy_width / 2) & (shift < epoxy_peak + epoxy_width / 2)
             max_s = max(intensity[mask])/2
             diff = intensity - max_s
-            low_s, high_s = shift[(shift < epoxy_peak) & (diff <= 0)][0], shift[(shift > epoxy_peak) & (diff <= 0)][-1] - 0.8
+            low_s, high_s = shift[(shift < epoxy_peak) & (diff <= 0)][0], shift[(shift > epoxy_peak) & (diff <= 0)][-1] + 0.2
 
             plt.plot([low_s, low_s, high_s, high_s], [0, max_s, max_s, 0], color="fuchsia")
             print(x_coord, high_s-low_s, shift[mask][np.argmax(intensity[mask])])

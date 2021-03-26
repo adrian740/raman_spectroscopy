@@ -15,7 +15,7 @@ def format_plot():
     plt.grid(b=True, which='minor', color='lightgray', linestyle='--')
 
 # Path containing the Raman Spectrum
-path = "data analysis project//120oC//"
+path = "multilAYER//"
 
 # All of the files in the directory (only analyze .txt files)
 allfiles = [f for f in listdir(path) if isfile(join(path, f))]
@@ -54,7 +54,7 @@ def read_data(filename):
 #   2. Scaled Concentration Profile
 #   3. Demonstration of scan
 #   4. Smoothed Concentration Profile
-plot_ = [0, 0, 0, 0, 1]
+plot_ = [1, 1, 1, 1, 1]
 
 # How many files to skip to plot one
 skip = 50
@@ -74,11 +74,17 @@ epoxy_peak = 984
 epoxy_width = 14
 
 # Places where it is known that the concentration is 100% for one material and 0% for the other:
-location1 = [-50, -37]
-location2 = [60, 70]
-
 # Test plot x coordinate, peak, width, color
-test_plot = np.array([[-40.0, epoxy_peak, epoxy_width, "C0"], [70.0, pei_peak, pei_width, "C1"]])
+
+# Used for single layer analysis
+#location1 = [-50, -37]
+#location2 = [60, 70]
+#test_plot = np.array([[-40.0, epoxy_peak, epoxy_width, "C0"], [70.0, pei_peak, pei_width, "C1"]])
+
+# Used for multi layer analysis
+location1 = [53500, 53560]
+location2 = [52920, 52950]
+test_plot = np.array([[52791.6, epoxy_peak, epoxy_width, "C0"], [54554.6, pei_peak, pei_width, "C1"]])
 
 #
 # End Raman Analysis Settings
@@ -95,11 +101,11 @@ for i in ordered_keys:
     filename = mapping[i]
     shift, intensity, smooth_intensity_data, x_coord = read_data(path + filename)
     idx += 1
-    if plot_[0] is 1 and idx % skip is 0:
+    if plot_[0] == 1 and idx % skip == 0:
         plt.plot(shift, smooth_intensity_data, label=filename)
     data_dict[i] = [shift, intensity, smooth_intensity_data, x_coord]
 
-if plot_[0] is 1:
+if plot_[0] == 1:
     plt.xlabel(r"Raman Shift [$cm^{-1}$]")
     plt.ylabel("Intensity [Counts]")
 
@@ -130,7 +136,7 @@ pei_max = np.array(pei_max)
 epo_max = np.array(epo_max)
 
 # Plot the concentration profiles
-if plot_[1] is 1:
+if plot_[1] == 1:
     plt.plot(x_val, epo_max, color="C0", label="% Epoxy")
     plt.plot(x_val, pei_max, color="C1", label="% PEI")
 
@@ -157,7 +163,7 @@ epo_max_mean = max(np.mean(epo_max[mask_high_x]), np.mean(epo_max[mask_low_x]))
 ramp_pei = (pei_max - pei_min_mean)/(pei_max_mean - pei_min_mean)
 ramp_epo = (epo_max - epo_min_mean)/(epo_max_mean - epo_min_mean)
 
-if plot_[2] is 1:
+if plot_[2] == 1:
     plt.plot(x_val, ramp_epo, color="C0", label="% Epoxy")
     plt.plot(x_val, ramp_pei, color="C1", label="% PEI")
 
@@ -184,14 +190,14 @@ def get_FWHM(shift, peak, width, intensity, x):
 
     return min(root1, root2), max(root1, root2), max_s
 
-if plot_[3] is 1:
+if plot_[3] == 1:
     for i in ordered_keys:
         shift, intensity, smooth_intensity_data, x_coord = data_dict.get(i)
 
         difference = test_plot[:, 0].astype(np.float) - x_coord
         idxs = np.where(abs(difference) < 0.01)[0]
 
-        if len(idxs) is not 0:
+        if len(idxs) != 0:
             focus_peak, focus_width, color = test_plot[:, 1][idxs], test_plot[:, 2][idxs], test_plot[:, 3][idxs][0]
             plt.plot(shift, intensity, label=("x = " + str(x_coord)), color=color)
             low_s, high_s, max_s = get_FWHM(shift, float(focus_peak), float(focus_width), intensity, x_coord)
@@ -215,10 +221,10 @@ if plot_[3] is 1:
     plt.legend()
     plt.show()
 
-if plot_[4] is 1:
+if plot_[4] == 1:
     # Smoothing
-    pei_hat = signal.savgol_filter(ramp_pei, 51, 0)
-    epo_hat = signal.savgol_filter(ramp_epo, 51, 0)
+    pei_hat = signal.savgol_filter(ramp_pei, 51, 11)
+    epo_hat = signal.savgol_filter(ramp_epo, 51, 11)
 
     plt.plot(x_val, epo_hat, color="C0", label="% Epoxy")
     plt.plot(x_val, pei_hat, color="C1", label="% PEI")

@@ -54,7 +54,7 @@ def read_data(filename):
 #   2. Scaled Concentration Profile
 #   3. Demonstration of scan
 #   4. Smoothed Concentration Profile
-plot_ = [0, 0, 0, 1, 1]
+plot_ = [0, 0, 0, 0, 1]
 
 # How many files to skip to plot one
 skip = 50
@@ -76,6 +76,13 @@ epoxy_width = 14
 # Places where it is known that the concentration is 100% for one material and 0% for the other:
 location1 = [-50, -37]
 location2 = [60, 70]
+
+# Test plot x coordinate, peak, width, color
+test_plot = np.array([[-40.0, epoxy_peak, epoxy_width, "C0"], [70.0, pei_peak, pei_width, "C1"]])
+
+#
+# End Raman Analysis Settings
+#
 
 # Read in data
 for filename in allfiles:
@@ -178,25 +185,18 @@ def get_FWHM(shift, peak, width, intensity, x):
     return min(root1, root2), max(root1, root2), max_s
 
 if plot_[3] is 1:
-    # Test plot the concentration for x = -40 and 70
     for i in ordered_keys:
         shift, intensity, smooth_intensity_data, x_coord = data_dict.get(i)
 
-        # Here needs to go the epoxy sample coordinate
-        if abs(x_coord + 40.0) < 0.01:
-            plt.plot(shift, intensity, label=("x = " + str(x_coord)), color="C0")
+        difference = test_plot[:, 0].astype(np.float) - x_coord
+        idxs = np.where(abs(difference) < 0.01)[0]
 
-            low_s, high_s, max_s = get_FWHM(shift, epoxy_peak, epoxy_width, intensity, x_coord)
+        if len(idxs) is not 0:
+            focus_peak, focus_width, color = test_plot[:, 1][idxs], test_plot[:, 2][idxs], test_plot[:, 3][idxs][0]
+            plt.plot(shift, intensity, label=("x = " + str(x_coord)), color=color)
+            low_s, high_s, max_s = get_FWHM(shift, float(focus_peak), float(focus_width), intensity, x_coord)
             plt.plot([low_s, low_s, high_s, high_s], [0, max_s, max_s, 0], color="fuchsia")
-            print("x:", x_coord, "FWHM:", round(high_s-low_s, 2), "Min/Max bounds:", round(low_s, 2), round(high_s, 2))
-
-        # Here needs to go the pei sample coordinate
-        elif abs(x_coord - 70.0) < 0.01:
-            plt.plot(shift, intensity, label=("x = " + str(x_coord)), color="C1")
-
-            low_s, high_s, max_s = get_FWHM(shift, pei_peak, pei_width, intensity, x_coord)
-            plt.plot([low_s, low_s, high_s, high_s], [0, max_s, max_s, 0], color="fuchsia", label="FWHM")
-            print("x:", x_coord, "FWHM:", round(high_s-low_s, 2), "Min/Max bounds:", round(low_s, 2), round(high_s, 2))
+            print("x:", x_coord, "FWHM:", round(high_s - low_s, 2), "Min/Max bounds:", round(low_s, 2), round(high_s, 2))
 
     max_v, min_v = 5000, 0
 
@@ -217,8 +217,8 @@ if plot_[3] is 1:
 
 if plot_[4] is 1:
     # Smoothing
-    pei_hat = signal.savgol_filter(ramp_pei, 21, 0)
-    epo_hat = signal.savgol_filter(ramp_epo, 21, 0)
+    pei_hat = signal.savgol_filter(ramp_pei, 51, 0)
+    epo_hat = signal.savgol_filter(ramp_epo, 51, 0)
 
     plt.plot(x_val, epo_hat, color="C0", label="% Epoxy")
     plt.plot(x_val, pei_hat, color="C1", label="% PEI")

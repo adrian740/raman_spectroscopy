@@ -84,7 +84,7 @@ epoxy_width = 14
 # Used for multi layer analysis
 location1 = [53500, 53560]
 location2 = [52920, 52950]
-test_plot = np.array([[52791.6, epoxy_peak, epoxy_width, "C0"], [54554.6, pei_peak, pei_width, "C1"]])
+test_plot = np.array([[52791.6, epoxy_peak, epoxy_width, "C0"], [53715.6, pei_peak, pei_width, "C1"]])
 
 #
 # End Raman Analysis Settings
@@ -216,6 +216,7 @@ if plot_[3] == 1:
     plt.ylabel("Intensity [Counts]")
 
     plt.xlim(950, 1040)
+    plt.ylim(min_v, max_v)
 
     format_plot()
     plt.legend()
@@ -223,8 +224,8 @@ if plot_[3] == 1:
 
 if plot_[4] == 1:
     # Smoothing
-    pei_hat = signal.savgol_filter(ramp_pei, 51, 11)
-    epo_hat = signal.savgol_filter(ramp_epo, 51, 11)
+    pei_hat = signal.savgol_filter(ramp_pei, 21, 11)
+    epo_hat = signal.savgol_filter(ramp_epo, 21, 11)
 
     plt.plot(x_val, epo_hat, color="C0", label="% Epoxy")
     plt.plot(x_val, pei_hat, color="C1", label="% PEI")

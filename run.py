@@ -15,7 +15,7 @@ def format_plot():
     plt.grid(b=True, which='minor', color='lightgray', linestyle='--')
 
 # Path containing the Raman Spectrum
-path = "data analysis project//180oC//"
+path = "data analysis project//120oC//"
 
 # All of the files in the directory (only analyze .txt files)
 allfiles = [f for f in listdir(path) if isfile(join(path, f))]
@@ -54,7 +54,7 @@ def read_data(filename):
 #   2. Scaled Concentration Profile
 #   3. Demonstration of scan
 #   4. Smoothed Concentration Profile
-plot_ = [1, 1, 1, 1, 1]
+plot_ = [1, 1, 1, 1, 1, 1]
 
 # How many files to skip to plot one
 skip = 50
@@ -234,6 +234,20 @@ if plot_[4] == 1:
 
     plt.xlabel("Distance [micrometers]")
     plt.ylabel("Normalized Peak Intensity [-]")
+
+    format_plot()
+    plt.legend()
+    plt.show()
+    
+if plot_[5] == 1:
+    # Smoothing Sum
+    pei_hat = butterworth_filter(ramp_pei)
+    epo_hat = butterworth_filter(ramp_epo)
+
+    plt.plot(x_val, epo_hat + pei_hat - 1, color="C0", label="Deviation from 100%")
+
+    plt.xlabel("Distance [micrometers]")
+    plt.ylabel("Deviation [-]")
 
     format_plot()
     plt.legend()

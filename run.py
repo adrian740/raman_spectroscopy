@@ -24,7 +24,7 @@ allfiles = [f for f in listdir(path) if isfile(join(path, f))]
 def butterworth_filter(dat):
     # Butterworth Filter
     N = 3  # Filter order
-    Wn = 0.1  # Cutoff frequency
+    Wn = 0.05  # Cutoff frequency
     B, A = signal.butter(N, Wn, output='ba')
     return signal.filtfilt(B, A, dat)
 
@@ -169,6 +169,8 @@ if plot_[2] == 1:
 
     plt.xlabel("Distance [micrometers]")
     plt.ylabel("Normalized Peak Intensity [-]")
+    
+    plt.ylim(-0.1, 1.2)
 
     format_plot()
     plt.legend()
@@ -224,8 +226,8 @@ if plot_[3] == 1:
 
 if plot_[4] == 1:
     # Smoothing
-    pei_hat = signal.savgol_filter(ramp_pei, 21, 11)
-    epo_hat = signal.savgol_filter(ramp_epo, 21, 11)
+    pei_hat = butterworth_filter(ramp_pei)
+    epo_hat = butterworth_filter(ramp_epo)
 
     plt.plot(x_val, epo_hat, color="C0", label="% Epoxy")
     plt.plot(x_val, pei_hat, color="C1", label="% PEI")

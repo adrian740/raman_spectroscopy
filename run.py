@@ -15,7 +15,7 @@ def format_plot():
     plt.grid(b=True, which='minor', color='lightgray', linestyle='--')
 
 # Path containing the Raman Spectrum
-path = "multilAYER//"
+path = "data analysis project//120oC//"
 
 # All of the files in the directory (only analyze .txt files)
 allfiles = [f for f in listdir(path) if isfile(join(path, f))]
@@ -77,14 +77,14 @@ epoxy_width = 14
 # Test plot x coordinate, peak, width, color
 
 # Used for single layer analysis
-#location1 = [-50, -37]
-#location2 = [60, 70]
-#test_plot = np.array([[-40.0, epoxy_peak, epoxy_width, "C0"], [70.0, pei_peak, pei_width, "C1"]])
+location1 = [-50, -37]
+location2 = [60, 70]
+test_plot = np.array([[-40.0, epoxy_peak, epoxy_width, "C0"], [70.0, pei_peak, pei_width, "C1"]])
 
 # Used for multi layer analysis
-location1 = [53500, 53560]
-location2 = [52920, 52950]
-test_plot = np.array([[52791.6, epoxy_peak, epoxy_width, "C0"], [53715.6, pei_peak, pei_width, "C1"]])
+#location1 = [53500, 53560]
+#location2 = [52920, 52950]
+#test_plot = np.array([[52791.6, epoxy_peak, epoxy_width, "C0"], [53715.6, pei_peak, pei_width, "C1"]])
 
 #
 # End Raman Analysis Settings

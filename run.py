@@ -15,7 +15,7 @@ def format_plot():
     plt.grid(b=True, which='minor', color='lightgray', linestyle='--')
 
 # Path containing the Raman Spectrum
-path = "data analysis project//120oC//"
+path = "data analysis project//180oC//"
 
 # All of the files in the directory (only analyze .txt files)
 allfiles = [f for f in listdir(path) if isfile(join(path, f))]
@@ -68,10 +68,12 @@ data_dict = {}
 #   PEAK: Main peak location
 #   WIDTH: width of max search
 pei_peak = 1004
-pei_width = 5
+pei_width = 10
 
 epoxy_peak = 984
 epoxy_width = 14
+
+plot_red_lines = True
 
 # Places where it is known that the concentration is 100% for one material and 0% for the other:
 # Test plot x coordinate, peak, width, color
@@ -135,18 +137,6 @@ x_val = np.array(x_val)
 pei_max = np.array(pei_max)
 epo_max = np.array(epo_max)
 
-# Plot the concentration profiles
-if plot_[1] == 1:
-    plt.plot(x_val, epo_max, color="C0", label="% Epoxy")
-    plt.plot(x_val, pei_max, color="C1", label="% PEI")
-
-    plt.xlabel("Distance [micrometers]")
-    plt.ylabel("Peak Intensity [Counts]")
-
-    format_plot()
-    plt.legend()
-    plt.show()
-
 # Two Extremes
 mask_low_x = (x_val > min(location1)) & (x_val < max(location1))
 mask_high_x = (x_val >= min(location2)) & (x_val < max(location2))
@@ -162,6 +152,25 @@ epo_max_mean = max(np.mean(epo_max[mask_high_x]), np.mean(epo_max[mask_low_x]))
 # Scale between (almost) 0 and 1
 ramp_pei = (pei_max - pei_min_mean)/(pei_max_mean - pei_min_mean)
 ramp_epo = (epo_max - epo_min_mean)/(epo_max_mean - epo_min_mean)
+
+# Plot the concentration profiles
+if plot_[1] == 1:
+    plt.plot(x_val, epo_max, color="C0", label="% Epoxy")
+    plt.plot(x_val, pei_max, color="C1", label="% PEI")
+    
+    if plot_red_lines: # Won't work for some data
+        plt.plot(location1, [epo_max_mean, epo_max_mean], color="r")
+        plt.plot(location1, [pei_min_mean, pei_min_mean], color="r")
+        
+        plt.plot(location2, [epo_min_mean, epo_min_mean], color="r")
+        plt.plot(location2, [pei_max_mean, pei_max_mean], color="r")
+
+    plt.xlabel("Distance [micrometers]")
+    plt.ylabel("Peak Intensity [Counts]")
+
+    format_plot()
+    plt.legend()
+    plt.show()
 
 if plot_[2] == 1:
     plt.plot(x_val, ramp_epo, color="C0", label="% Epoxy")

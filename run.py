@@ -75,6 +75,9 @@ epoxy_width = 14
 
 plot_red_lines = True
 
+# Does not improve results... keep on False
+averaging_technique = False
+
 # Places where it is known that the concentration is 100% for one material and 0% for the other:
 # Test plot x coordinate, peak, width, color
 
@@ -173,6 +176,19 @@ if plot_[1] == 1:
     plt.show()
 
 if plot_[2] == 1:
+    epo_gen_epo = ramp_epo
+    pei_gen_epo = 1 - epo_gen_epo
+    
+    pei_gen_pei = ramp_pei
+    epo_gen_pei = 1 - pei_gen_pei
+    
+    pei_arr = np.mean([pei_gen_epo, pei_gen_pei], axis=0)
+    epo_arr = np.mean([epo_gen_epo, epo_gen_pei], axis=0)
+    
+    if averaging_technique:
+        ramp_epo = epo_arr
+        ramp_pei = pei_arr
+    
     plt.plot(x_val, ramp_epo, color="C0", label="% Epoxy")
     plt.plot(x_val, ramp_pei, color="C1", label="% PEI")
 
@@ -180,6 +196,9 @@ if plot_[2] == 1:
     plt.ylabel("Normalized Peak Intensity [-]")
     
     plt.ylim(-0.1, 1.2)
+    
+    # Used to mirror the plot (just for the paper)
+    #plt.xlim(80, -75)
 
     format_plot()
     plt.legend()

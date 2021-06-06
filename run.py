@@ -15,7 +15,7 @@ def format_plot():
     plt.grid(b=True, which='minor', color='lightgray', linestyle='--')
 
 # Path containing the Raman Spectrum
-path = "data analysis project//180oC//"
+path = "data analysis project//120oC//"
 
 # All of the files in the directory (only analyze .txt files)
 allfiles = [f for f in listdir(path) if isfile(join(path, f))]
@@ -54,7 +54,7 @@ def read_data(filename):
 #   2. Scaled Concentration Profile
 #   3. Demonstration of scan
 #   4. Smoothed Concentration Profile
-plot_ = [1, 1, 1, 1, 1, 1]
+plot_ = [0, 0, 0, 1, 0, 0]
 
 # How many files to skip to plot one
 skip = 50
@@ -161,15 +161,19 @@ if plot_[1] == 1:
     plt.plot(x_val, epo_max, color="C0", label="% Epoxy")
     plt.plot(x_val, pei_max, color="C1", label="% PEI")
     
+    width = 7.0
+    color = "r"
+    
     if plot_red_lines: # Won't work for some data
-        plt.plot(location1, [epo_max_mean, epo_max_mean], color="r")
-        plt.plot(location1, [pei_min_mean, pei_min_mean], color="r")
+        plt.plot(location1, [epo_max_mean, epo_max_mean], color=color, linewidth=width)
+        plt.plot(location1, [pei_min_mean, pei_min_mean], color=color, linewidth=width)
         
-        plt.plot(location2, [epo_min_mean, epo_min_mean], color="r")
-        plt.plot(location2, [pei_max_mean, pei_max_mean], color="r")
+        plt.plot(location2, [epo_min_mean, epo_min_mean], color=color, linewidth=width)
+        plt.plot(location2, [pei_max_mean, pei_max_mean], color=color, linewidth=width)
 
     plt.xlabel("Distance [micrometers]")
     plt.ylabel("Peak Intensity [Counts]")
+    plt.title(r"Mean At Ends Method $120\degree C$")
 
     format_plot()
     plt.legend()
@@ -192,13 +196,14 @@ if plot_[2] == 1:
     plt.plot(x_val, ramp_epo, color="C0", label="% Epoxy")
     plt.plot(x_val, ramp_pei, color="C1", label="% PEI")
 
-    plt.xlabel("Distance [micrometers]")
-    plt.ylabel("Normalized Peak Intensity [-]")
+    plt.xlabel(r"Distance [microns]")
+    plt.ylabel(r"Normalized Peak Intensity [-]")
+    plt.title(r"Concentration Profile at $180\degree C$")
     
     plt.ylim(-0.1, 1.2)
     
     # Used to mirror the plot (just for the paper)
-    #plt.xlim(80, -75)
+    plt.xlim(80, -75)
 
     format_plot()
     plt.legend()
@@ -220,6 +225,8 @@ def get_FWHM(shift, peak, width, intensity, x):
 
     return min(root1, root2), max(root1, root2), max_s
 
+ran_once = 1
+
 if plot_[3] == 1:
     for i in ordered_keys:
         shift, intensity, smooth_intensity_data, x_coord = data_dict.get(i)
@@ -228,10 +235,15 @@ if plot_[3] == 1:
         idxs = np.where(abs(difference) < 0.01)[0]
 
         if len(idxs) != 0:
+            
             focus_peak, focus_width, color = test_plot[:, 1][idxs], test_plot[:, 2][idxs], test_plot[:, 3][idxs][0]
-            plt.plot(shift, intensity, label=("x = " + str(x_coord)), color=color)
+            plt.plot(shift, intensity, label=("x = " + str(x_coord) + r"$\mu m$"), color=color)
             low_s, high_s, max_s = get_FWHM(shift, float(focus_peak), float(focus_width), intensity, x_coord)
-            plt.plot([low_s, low_s, high_s, high_s], [0, max_s, max_s, 0], color="fuchsia")
+            label_text = ""
+            if ran_once == 0:
+                label_text = "FWHM"
+            plt.plot([low_s, low_s, high_s, high_s], [0, max_s, max_s, 0], color="fuchsia", label=label_text)
+            ran_once -= 1
             print("x:", x_coord, "FWHM:", round(high_s - low_s, 2), "Min/Max bounds:", round(low_s, 2), round(high_s, 2))
 
     max_v, min_v = 5000, 0
@@ -244,6 +256,7 @@ if plot_[3] == 1:
 
     plt.xlabel(r"Raman Shift [$cm^{-1}$]")
     plt.ylabel("Intensity [Counts]")
+    plt.title(r"Raman Spectroscopy Intensity Distribution at $120\degree C$")
 
     plt.xlim(950, 1040)
     plt.ylim(min_v, max_v)
@@ -272,11 +285,12 @@ if plot_[5] == 1:
     pei_hat = butterworth_filter(ramp_pei)
     epo_hat = butterworth_filter(ramp_epo)
 
-    plt.plot(x_val, epo_hat + pei_hat - 1, color="C0", label="Deviation from 100%")
+    plt.plot(x_val, ramp_pei + ramp_epo - 1, color="C0", label="Deviation from 100%")
 
     plt.xlabel("Distance [micrometers]")
     plt.ylabel("Deviation [-]")
+    plt.title(r"Deviation from 100% at $120\degree C$")
 
     format_plot()
-    plt.legend()
+    #plt.legend()
     plt.show()
